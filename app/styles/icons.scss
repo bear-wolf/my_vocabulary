@@ -1,0 +1,24 @@
+.icon{
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-repeat: no-repeat;
+  background-position: 0;
+  font-size: 0;
+
+  &-closed{
+    background-image: url('../assets/svgs/icon-closed.svg');
+    width: 16px;
+    height: 13px;
+  }
+  &-active{
+    background-image: url('../assets/svgs/icon-active.svg');
+    width: 16px;
+    height: 13px;
+  }
+  &-open{
+    background-image: url('../assets/svgs/icon-white.svg');
+    width: 18px;
+    height: 13px;
+  }
+}

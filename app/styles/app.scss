@@ -1,0 +1,142 @@
+@import "bootstrap/scss/bootstrap";
+@import "reset";
+@import "size";
+@import "icons";
+@import "variables";
+
+html,
+body{
+  height: 100%;
+}
+
+body {
+  background-image: url('../assets/images/background.jpg');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  font-family: Inter;
+  @extend .container-fluid;
+}
+
+.container-md {
+  max-width: 1200px;
+}
+
+.private-office {
+  height: 100vh;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding-bottom: 50px;
+
+  header {
+    display: flex;
+    width: 100%;
+    position: relative;
+    height: 100px;
+  }
+
+  &__logotype {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-image: url('../assets/images/logotype.svg');
+    background-repeat: no-repeat;
+    background-position: 0;
+    padding-left: 200px;
+    height: 60px;
+    width: auto;
+    color: white;
+    display: flex;
+    @extend .fs-1
+  }
+
+  &__modal {
+    border: 1px solid #000;
+    flex: 1;
+    @extend .br-16;
+    @extend .container-md;
+    @extend .bg-white;
+    @extend .p-16;
+
+    .title {
+      color: #6D5C70;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 15px;
+      text-align: left;
+    }
+
+    .color-gray {
+      color: #AAA0AB;
+    }
+  }
+
+  &__levels {
+    max-width: 270px;
+    width: 100%;
+    border-right: 1px solid $border-color;
+    padding-right: 20px;
+    @extend .p-16;
+    @extend .d-flex;
+    @extend .flex-column;
+
+    .list {
+      color: #AAA0AB;
+
+      li {
+        display: flex;
+        justify-content: space-between;
+        padding-right: 8px;
+        cursor: pointer;
+
+        div {
+          position: relative;
+          padding-left: 30px;
+          height: 32px;
+          .icon{
+            left: 8px;
+            top: 5px
+          }
+        }
+
+        .status {
+          color: #DCD0EC
+        }
+
+        &.open {
+          color: white;
+          background: #823CDC;
+          border-radius: 8px;
+
+          &.active {
+            color: white;
+          }
+        }
+
+        &.active {
+          color: #14001A;
+
+          .status {
+            color: #AAA0AB;
+          }
+        }
+      }
+
+    }
+  }
+
+  &__topics {
+    max-width: 165px;
+    width: 100%;
+    border-right: 1px solid $border-color;
+    @extend .d-flex;
+    @extend .flex-column;
+    @extend .p-16;
+  }
+
+  &__content {
+    @extend .p-16;
+    @extend .d-flex;
+    @extend .flex-column;
+  }
+}
