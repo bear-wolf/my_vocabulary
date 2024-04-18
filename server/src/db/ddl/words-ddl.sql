@@ -1,0 +1,12 @@
+CREATE TABLE words (
+  id BIGSERIAL PRIMARY KEY,
+  uuid VARCHAR(255) NOT NULL,
+  picture TEXT NOT NULL,
+  original VARCHAR(100) NOT NULL,
+  translate JSON DEFAULT {},
+  voice JSON DEFAULT {},
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
+);
+
+CREATE UNIQUE INDEX words_uuid_unique_idx ON words(uuid);

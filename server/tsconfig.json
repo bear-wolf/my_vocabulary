@@ -1,0 +1,20 @@
+{
+  "extends": "@tsconfig/node16/tsconfig.json",
+  "compilerOptions": {
+    "sourceMap": true,
+    "outDir": "dist",
+    "strict": true,
+    "lib": [
+      "esnext"
+    ],
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "target": "esnext",
+    "moduleResolution": "Node"
+  },
+
+  "include": ["**/*"],
+  "exclude": [
+    "node_modules", "**/*.spec.ts"]
+}
