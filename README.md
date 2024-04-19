@@ -12,7 +12,10 @@
 > client/public/assets/images/background.jpg
 > https://github.com/productioncoder/sequelize-tutorial/tree/main
 https://stackoverflow.com/questions/58384179/syntaxerror-cannot-use-import-statement-outside-a-module
-
+https://stackoverflow.com/questions/30232258/how-do-i-pass-a-parameter-to-express-js-router
+> https://guides.emberjs.com/v2.6.0/components/the-component-lifecycle/
+> 
+> 
 # Open question
 - ddl що це
   

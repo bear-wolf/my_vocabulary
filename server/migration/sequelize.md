@@ -1,7 +1,7 @@
 # migration
 
 -- create
-> npx sequelize-cli model:generate --name User --attributes firstName:string,lastName:string,email:string
+> npx sequelize-cli model:generate --name UserModel --attributes firstName:string,lastName:string,email:string
 
 -- running
 > npx sequelize-cli db:migrate

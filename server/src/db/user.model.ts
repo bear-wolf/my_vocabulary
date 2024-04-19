@@ -1,8 +1,7 @@
-// src/models/user.ts
 import { Model, Sequelize, DataTypes } from 'sequelize';
 import exp from "node:constants";
 
-export default class User extends Model {
+class UserModel extends Model {
     public id?: number;
     public uuid?: string;
     public first_name?: string;
@@ -14,6 +13,8 @@ export default class User extends Model {
     public created_at?: string;
     public updated_at?: string;
 }
+
+export default UserModel
 
 export const userAttributes= {
     id: {
@@ -59,10 +60,11 @@ export const userAttributes= {
 }
 
 export const UserSchema = (sequelize: Sequelize) => {
-    User.init(userAttributes, {
+    UserModel.init(userAttributes, {
         sequelize,
-        tableName: 'users',
+        tableName: 'Users',
         timestamps: false
     });
-    User.sync();
+    UserModel.sync();
+    return UserModel;
 }

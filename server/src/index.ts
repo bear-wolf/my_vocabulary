@@ -15,7 +15,7 @@ routes(app)
 
 // Clusterization the node application
 if (cluster.isMaster) {
-    const numCPUs = 2 || os.cpus().length;
+    const numCPUs = 1 || os.cpus().length;
     console.log('number of CPUs', numCPUs)
 
     for (let i = 0; i < numCPUs; i++) cluster.fork();

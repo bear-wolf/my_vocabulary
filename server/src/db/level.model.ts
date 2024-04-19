@@ -1,8 +1,7 @@
-// src/models/user.ts
-import { Model, Sequelize, DataTypes } from 'sequelize';
-import exp from "node:constants";
+// src/models/user.model.ts
+import {DataTypes, Model, Sequelize} from 'sequelize';
 
-export default class Level extends Model {
+export default class LevelModel extends Model {
     public id?: number;
     public uuid?: string;
     public title?: string;
@@ -10,7 +9,7 @@ export default class Level extends Model {
     public updated_at?: string;
 }
 
-export const levelAttributes= {
+export const levelAttributes = {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -33,11 +32,13 @@ export const levelAttributes= {
     }
 }
 
-export const UserSchema = (sequelize: Sequelize) => {
-    Level.init(levelAttributes, {
+export const LevelSchema = (sequelize: Sequelize) => {
+    LevelModel.init(levelAttributes, {
         sequelize,
-        tableName: 'levels',
+        tableName: 'Levels',
         timestamps: false
     });
-    Level.sync();
+    LevelModel.sync();
+
+    return LevelModel;
 }

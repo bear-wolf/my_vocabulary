@@ -1,8 +1,9 @@
-// src/models/user.ts
+// src/models/user.model.ts
 import { Model, Sequelize, DataTypes } from 'sequelize';
 import exp from "node:constants";
+import UserModel from "./user.model";
 
-export default class Topic extends Model {
+export default class TopicModel extends Model {
     public id?: number;
     public uuid?: string;
     public title?: string;
@@ -33,11 +34,12 @@ export const topicAttributes= {
     }
 }
 
-export const UserSchema = (sequelize: Sequelize) => {
-    Topic.init(topicAttributes, {
+export const TopicSchema = (sequelize: Sequelize) => {
+    TopicModel.init(topicAttributes, {
         sequelize,
-        tableName: 'topics',
+        tableName: 'Topics',
         timestamps: false
     });
-    Topic.sync();
+    TopicModel.sync();
+    return TopicModel;
 }

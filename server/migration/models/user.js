@@ -3,7 +3,7 @@
 const {
     Model
 } = require('sequelize');
-const {userAttributes} = require("../../src/db/user.ts");
+const {userAttributes} = require("../../src/db/user.model.ts");
 
 module.exports = (sequelize, DataTypes) => {
     class User extends Model {

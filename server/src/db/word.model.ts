@@ -1,8 +1,7 @@
-// src/models/user.ts
 import { Model, Sequelize, DataTypes } from 'sequelize';
 import exp from "node:constants";
 
-export default class Word extends Model {
+export default class WordModel extends Model {
     public id?: number;
     public uuid?: string;
     public title?: string;
@@ -49,11 +48,13 @@ export const wordAttributes= {
     }
 }
 
-export const UserSchema = (sequelize: Sequelize) => {
-    Word.init(wordAttributes, {
+export const WordSchema = (sequelize: Sequelize) => {
+    WordModel.init(wordAttributes, {
         sequelize,
-        tableName: 'words',
+        tableName: 'Words',
         timestamps: false
     });
-    Word.sync();
+    WordModel.sync();
+
+    return WordModel
 }

@@ -1,3 +1,4 @@
+// @ts-ignore
 describe("Simple functions", () => {
     it("should multiply 5 by 3", () => {
         const result = 5;
