@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
-import axios from 'axios'
+import { inject as service } from '@ember/service';
 
 export default class LessonComponent extends Component {
+  @service data;
+
   constructor() {
     super(...arguments);
 
@@ -10,32 +12,34 @@ export default class LessonComponent extends Component {
     this.getWords()
   }
 
-  getLevels() {
-    // console.log(process.env.API_URL);
-    //console.log(config);
+  getUsers() {
+    this.data.getUserList()
+      .then((users) => {
+        console.log(users);
+      })
+      .catch((err) => console.log(err))
+  }
 
-    axios(`http://localhost:4000/v1/level/list`)
+  getLevels() {
+    this.data.getLevelList()
       .then((response) => {
         this.levels = response.data;
-        console.log(this.levels);
       })
       .catch(error => console.log('ERROR', error));
   }
 
   getTopics() {
-    axios(`http://localhost:4000/v1/topic/list`)
+    this.data.getTopicList()
       .then((response) => {
         this.topics = response.data;
-        console.log(this.topics);
       })
       .catch(error => console.log('ERROR', error));
   }
 
   getWords() {
-    axios(`http://localhost:4000/v1/word/list`)
+    this.data.getWordList()
       .then((response) => {
         this.words = response.data;
-        console.log(this.words);
       })
       .catch(error => console.log('ERROR', error));
   }
