@@ -1,8 +1,13 @@
 import Component from "@glimmer/component";
 import { inject as service } from '@ember/service';
+import {tracked} from "@glimmer/tracking";
+import {action} from "@ember/object";
 
 export default class LessonComponent extends Component {
   @service data;
+  @tracked levels = [];
+  @tracked topics = [];
+  @tracked words = [];
 
   constructor() {
     super(...arguments);
@@ -10,6 +15,14 @@ export default class LessonComponent extends Component {
     this.getLevels()
     this.getTopics()
     this.getWords()
+  }
+
+  @action
+  setActiveLevel(index) {
+  }
+
+  @action
+  setActiveTopic(index) {
   }
 
   getUsers() {
@@ -23,7 +36,11 @@ export default class LessonComponent extends Component {
   getLevels() {
     this.data.getLevelList()
       .then((response) => {
-        this.levels = response.data;
+        this.levels = response.data.map(level => {
+          level.catalog = 'open';
+          level.status = null;
+          return level;
+        });
       })
       .catch(error => console.log('ERROR', error));
   }
@@ -31,7 +48,11 @@ export default class LessonComponent extends Component {
   getTopics() {
     this.data.getTopicList()
       .then((response) => {
-        this.topics = response.data;
+        this.topics = response.data.map((topic, index) => {
+          topic.status = 'completed';
+          topic.active = index === 0;
+          return topic;
+        });
       })
       .catch(error => console.log('ERROR', error));
   }

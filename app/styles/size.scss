@@ -31,9 +31,17 @@ $padding-none: 0;
 }
 @mixin make-padding($offset){
   .p-#{$offset} { padding: #{$offset}px!important; }
+  .pl-#{$offset} { padding-left: #{$offset}px!important; }
+  .pr-#{$offset} { padding-right: #{$offset}px!important; }
+  .pb-#{$offset} { padding-bottom: #{$offset}px!important; }
+  .pt-#{$offset} { padding-top: #{$offset}px!important; }
 }
 @mixin make-margin($offset){
   .m-#{$offset} { margin: #{$offset}px!important; }
+  .ml-#{$offset} { margin-left: #{$offset}px!important; }
+  .mr-#{$offset} { margin-right: #{$offset}px!important; }
+  .mb-#{$offset} { margin-bottom: #{$offset}px!important; }
+  .mt-#{$offset} { margin-top: #{$offset}px!important; }
 }
 
 @mixin make-width($offset){
@@ -97,12 +105,12 @@ $font-size-list: 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 22 23 24 25 26
   @include make-all-margins(lg);
 }
 
-$margin: 8 16;
+$margin: 8 12 16 20;
 @each $value in $margin {
   @include make-margin($value);
 }
 
-$padding: 8 16;
+$padding: 8 16 20;
 @each $value in $padding {
   @include make-padding($value);
 }

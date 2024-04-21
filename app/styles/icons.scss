@@ -21,4 +21,14 @@
     width: 18px;
     height: 13px;
   }
+  &-completed{
+    background-image: url('../assets/svgs/icon-completed.svg');
+    width: 20px;
+    height: 20px;
+    &-white{
+      background-image: url('../assets/svgs/icon-completed-white.svg');
+      width: 20px;
+      height: 20px;
+    }
+  }
 }
