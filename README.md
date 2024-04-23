@@ -1,27 +1,17 @@
 # my_vocabulary
 
+## Client
+- Start application on port: 4200
+    - > npm run start
 
-## install
-> npm install -g ember-cli
+## Server
+- migration
+    - > cd ./server/migration
+    - > npm run up
 
+* Data migration is currently not done via seed, but is designed as a normal migration, because something is wrong with local packages.
 
-
-# resources
-
-> ember install ember-cli-sass
-> client/public/assets/images/background.jpg
-> https://github.com/productioncoder/sequelize-tutorial/tree/main
-https://stackoverflow.com/questions/58384179/syntaxerror-cannot-use-import-statement-outside-a-module
-https://stackoverflow.com/questions/30232258/how-do-i-pass-a-parameter-to-express-js-router
-> https://guides.emberjs.com/v2.6.0/components/the-component-lifecycle/
-> 
-> 
-# Open question
-- ddl що це
-  
-- Universally Unique Identifiers, UUID
-
-- npx sequelize db:seed:all
-> npm ERR! could not determine executable to run
-npm ERR! A complete log of this run can be found in:
-npm ERR!     /root/.npm/_logs/2024-04-18T12_33_05_116Z-debug-0.log
+- db PostgreSQL
+    - > cd ./server/
+    - > npm run start.db
+      
