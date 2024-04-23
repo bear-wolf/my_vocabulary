@@ -1,0 +1,32 @@
+<nav>
+  <li><LinkTo @route="test">test</LinkTo></li>
+</nav>
+
+{{input valueBinding="newNoteName"}}
+
+{{#linkTo "notes.note" this}}
+  {{name}}
+{{/linkTo}}
+{{view Ember.TextArea valueBinding="value"}}
+
+{{get this.array}}
+
+<ul>
+  {{#each fruit}}
+    <li>{{this}} {{@index}} {{fruit.length}}</li>
+  {{/each}}
+</ul>
+
+<button class="btn btn-default btn-xs"
+  {{action "createNewNote"}}>
+  New Note
+</button>
+
+<!--      <div class="list-group" style="margin-top: 10px;">-->
+  <!--        {{#each controller}}-->
+<!--          <div class="list-group-item">-->
+<!--            ++++-->
+<!--          </div>-->
+  <!--        {{/each}}-->
+<!--      </div>-->
+

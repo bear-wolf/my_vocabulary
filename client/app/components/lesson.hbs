@@ -1,0 +1,70 @@
+<div class="lesson-block d-flex w-100">
+  <div class="d-flex lesson-block__levels">
+    <div class="title mb-3">Рівні</div>
+
+    <ul class="list">
+      {{#each this.levels key="status" as |level index|}}
+        <li class="{{if (not-eq level.status 0) 'open' 'closed'}} {{if level.active 'active' ''}}"
+            onclick={{action 'setActiveLevel' level.uuid index}}>
+          <div>
+            {{#if (eq level.status 1)}}
+              <i class="icon icon-{{if (eq level.active true) 'active' 'open'}}"></i>
+            {{else}}
+              <i class="icon icon-closed"></i>
+            {{/if}}
+            {{level.title}}
+          </div>
+          {{#if level.status}}
+            <span class="status">{{if level.progress level.progress '0'}}%</span>
+          {{/if}}
+        </li>
+      {{/each}}
+    </ul>
+
+    {{#if this.message}}
+      <div class="message">{{this.message}}</div>
+    {{/if}}
+
+  </div>
+
+  <div class="d-flex w-100">
+    <div class="d-flex lesson-block__topics flex-column">
+      <div class="title mb-3">Теми</div>
+      <ul class="list">
+        {{#each this.topics as |topic index|}}
+          <li class="{{if topic.status 'completed' 'pl-20'}} {{if topic.active 'active' ''}}"
+              onclick={{action 'setActiveTopic' index}}>
+            <div class="{{if topic.status 'pl-20' ''}}">
+<!--              {{#if topic.active}} <i class="icon icon-completed-white"></i> {{/if}}-->
+              {{topic.title}}
+            </div>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  <div class="d-flex lesson-block__words w-100 pl-24 pr-24">
+  <ul class="list w-100">
+    {{#each this.words as |word index|}}
+      <li class="border-bottom cursor-pointer"
+          onclick="{{ action 'getSound' word.id }}">
+        <div class="d-flex">
+          <div class="content-center">
+            <img src="assets/{{word.picture}}" alt=""/>
+          </div>
+          <div class="justify-content-between w-100 d-flex">
+            <div class="d-flex flex-column justify-content-center pl-16">
+              <span class="original">{{word.original}}</span>
+              <span class="translate">{{word.translate.ua}}</span>
+            </div>
+            <div class="sound content-center relative">
+              <i class="icon icon-sound"></i>
+            </div>
+        </div>
+
+    </div>
+      </li>
+    {{/each}}
+    </ul>
+  </div>
+</div>
+</div>

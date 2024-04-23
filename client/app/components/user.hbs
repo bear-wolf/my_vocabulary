@@ -1,0 +1,11 @@
+<div class="user_block d-flex flex-column">
+  <div class="title fs-2 mb-3">The user list</div>
+
+  <ul class="user-list">
+    {{#each this.userList as |user|}}
+      <li class="pl-16">
+        <LinkTo class="p-8" @route="lesson" @query={{hash user_id=user.id}}>{{user.first_name}} {{user.last_name}}</LinkTo>
+      </li>
+    {{/each}}
+  </ul>
+</div>

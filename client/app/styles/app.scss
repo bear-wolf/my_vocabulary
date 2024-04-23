@@ -1,0 +1,241 @@
+@import "bootstrap/scss/bootstrap";
+@import "reset";
+@import "size";
+@import "icons";
+@import "variables";
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-image: url('../assets/images/background.jpg');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  font-family: Inter;
+  @extend .container-fluid;
+}
+
+.container-md {
+  max-width: 1200px;
+}
+
+.active {
+  color: white !important;
+  background-color: $bg-active;
+  border-radius: 8px;
+}
+
+.relative {
+  position: relative;
+}
+
+.private-office {
+  height: 100vh;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding-bottom: 50px;
+
+  header {
+    display: flex;
+    width: 100%;
+    position: relative;
+    height: 100px;
+  }
+
+  .user-list {
+    a {
+      color: #555;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__logotype {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-image: url('../assets/images/logotype.svg');
+    background-repeat: no-repeat;
+    background-position: 0;
+    padding-left: 200px;
+    height: 60px;
+    width: auto;
+    color: white;
+    display: flex;
+    @extend .fs-1
+  }
+
+  &__modal {
+    border: 1px solid #000;
+    flex: 1;
+    @extend .br-16;
+    @extend .container-md;
+    @extend .bg-white;
+    @extend .p-16;
+
+    .title {
+      color: #6D5C70;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 15px;
+      text-align: left;
+    }
+
+    .color-gray {
+      color: #AAA0AB;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+  }
+}
+
+.lesson-block {
+  &__levels {
+    max-width: 270px;
+    width: 100%;
+    border-right: 1px solid $border-color;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+
+    .list {
+      color: #AAA0AB;
+
+      li {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 8px;
+        cursor: pointer;
+        color: #AAA0AB;
+
+        div {
+          position: relative;
+          padding-left: 30px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+
+          .icon {
+            left: 4px;
+            top: 9px
+          }
+        }
+
+        .status {
+          color: #DCD0EC;
+          display: flex;
+          align-items: center;
+        }
+
+        &.open {
+          border-radius: 8px;
+        }
+
+        &.active {
+          color: white !important;
+
+          .status {
+            color: #AAA0AB !important;
+          }
+        }
+      }
+
+    }
+  }
+
+  &__topics {
+    max-width: 265px;
+    width: 100%;
+    border-right: 1px solid $border-color;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+
+    li {
+      padding: 0 8px;
+      height: 32px;
+      cursor: pointer;
+
+      div {
+        position: relative;
+        display: flex;
+        height: 100%;
+        align-items: center;
+      }
+
+      &.completed {
+        color: #14001A;
+      }
+
+      .icon-completed,
+      .icon-completed-white {
+        top: 50%;
+        margin-top: -11px;
+      }
+    }
+  }
+
+  &__words {
+    li {
+      height: 69px;
+
+      div {
+        height: 100%;
+
+        img {
+          max-width: 48px;
+        }
+
+        .sound{
+          width: 32px;
+          height: 100%;
+          cursor: pointer!important;
+
+          .icon{
+            top: 50%;
+            margin-top: -12px;
+          }
+        }
+
+        .original {
+          font-size: 18px;
+          font-family: Inter;
+          font-weight: 500;
+          color: #14001A;
+        }
+
+        .translate {
+          font-size: 14px;
+          font-family: Inter;
+          font-weight: 500;
+          color: #6D5C70;
+        }
+
+        .content-center {
+          height: 100%;
+          display: flex;
+          align-items: center;
+        }
+      }
+
+    }
+  }
+}
+
+
+.message {
+  padding: 8px;
+  border-radius: 16px;
+  border: 2px solid red;
+  font-size: 16px;
+}
