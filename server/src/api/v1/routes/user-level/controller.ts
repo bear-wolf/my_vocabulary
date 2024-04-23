@@ -60,13 +60,21 @@ export const updateUserLevel = async (req: any, res: any, next: any) => {
 
 export const createUserLevel = async (req: any, res: any, next: any) => {
     let userLevel;
-    console.log("CREAte ul", req.body);
+
+    userLevel = await UserLevel.findOne({
+        where: {
+            user_uuid: req.body.user_uuid,
+            level_uuid: req.body.level_uuid,
+        }});
+
+    if (userLevel) return res.status(400).json({err: 'User level already exists'});
+
     try {
         userLevel = await UserLevel.create({
             uuid: v4(),
             user_uuid: req.body.user_uuid,
             level_uuid: req.body.level_uuid,
-            status: 0, // 0 -> closed; 1 -> open 2 -> progress,
+            status: 1, // 0 -> closed; 1 -> open 2 -> progress,
             progress: 0,
             created_at: Date.now()
         })

@@ -12,8 +12,8 @@ module.exports = {
       uuid: {
         type: DataTypes.STRING(100)
       },
-      topicUUID: {
-        type: DataTypes.UUID,
+      topic_uuid: {
+        type: DataTypes.STRING(36),
         allowNull: false
       },
       picture: {
@@ -37,8 +37,7 @@ module.exports = {
         default: Date.now()
       },
       updated_at: {
-        type: DataTypes.STRING(50),
-        allowNull: true
+        type: DataTypes.STRING(50)
       }
     });
   },

@@ -8,6 +8,15 @@ export const getList = async (req: any, res: any, next: any) => {
         .json(list)
 }
 
+export const getByTopicUUID = async (req: any, res: any, next: any) => {
+    const list = await Word.findAll({ where: { topic_uuid: req.query.topic_uuid } });
+
+    res
+        .status(200)
+        .json(list || [])
+}
+
+
 export const getByID = async (req: any, res: any, next: any) => {
     const list = await Word.findByPk(req.params.id);
 

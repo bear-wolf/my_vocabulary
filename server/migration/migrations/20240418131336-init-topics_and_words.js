@@ -62,9 +62,8 @@ module.exports = {
         await queryInterface.bulkInsert('Topics', list);
 
         let words = [ {
-                uuid: v4(),
-                topicUUID: list[0].uuid,
-                picture: null,
+                topic_uuid: list[0].uuid,
+                picture: 'svgs/words/bear.svg',
                 original: 'Bear',
                 translate: JSON.stringify({
                     ua: 'Ведмідь',
@@ -73,9 +72,8 @@ module.exports = {
                 voice: JSON.stringify({})
             },
             {
-                uuid: v4(),
-                topicUUID: list[0].uuid,
-                picture: null,
+                topic_uuid: list[0].uuid,
+                picture: 'svgs/words/cat.svg',
                 original: 'Cat',
                 translate: JSON.stringify({
                     ua: 'Кіт',
@@ -84,19 +82,59 @@ module.exports = {
                 voice: JSON.stringify({})
             },
             {
-                uuid: v4(),
-                topicUUID: list[0].uuid,
-                picture: null,
+                topic_uuid: list[0].uuid,
+                picture: 'svgs/words/cow.svg',
                 original: 'Cow',
                 translate: JSON.stringify({
                     ua: 'Корова',
                     en: 'Cow'
                 }),
                 voice: JSON.stringify({})
+            },
+            {
+                topic_uuid: list[0].uuid,
+                picture: 'svgs/words/deer.svg',
+                original: 'Deer',
+                translate: JSON.stringify({
+                    ua: 'Олень',
+                    en: 'Deer'
+                }),
+                voice: JSON.stringify({})
+            },
+            {
+                topic_uuid: list[0].uuid,
+                picture: 'svgs/words/fox.svg',
+                original: 'Fox',
+                translate: JSON.stringify({
+                    ua: 'Лисиця',
+                    en: 'Fox'
+                }),
+                voice: JSON.stringify({})
+            },
+            {
+                topic_uuid: list[0].uuid,
+                picture: 'svgs/words/monkey.svg',
+                original: 'Monkey',
+                translate: JSON.stringify({
+                    ua: 'Мавпа',
+                    en: 'Monkey'
+                }),
+                voice: JSON.stringify({})
+            },
+            {
+                topic_uuid: list[0].uuid,
+                picture: 'svgs/words/squirrel.svg',
+                original: 'Білка',
+                translate: JSON.stringify({
+                    ua: 'Корова',
+                    en: 'Білка'
+                }),
+                voice: JSON.stringify({})
             }
         ]
         words.map(item => {
             item.created_at = Date.now().toString()
+            item.uuid = v4()
         })
         await queryInterface.bulkInsert('Words', words);
     },

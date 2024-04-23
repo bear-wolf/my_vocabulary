@@ -10,7 +10,7 @@ module.exports = {
         primaryKey: true
       },
       uuid: {
-        type: Sequelize.DataTypes.STRING(100)
+        type: Sequelize.DataTypes.STRING(36)
       },
       title: {
         type: Sequelize.DataTypes.STRING(255),
@@ -21,8 +21,7 @@ module.exports = {
         default: Date.now()
       },
       updated_at: {
-        type: Sequelize.DataTypes.STRING(50),
-        allowNull: true
+        type: Sequelize.DataTypes.STRING(50)
       }
     });
   },
