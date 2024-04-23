@@ -14,4 +14,6 @@
 - db PostgreSQL
     - > cd ./server/
     - > npm run start.db
-      
+
+- run server on port 4000
+    - > npm run start
