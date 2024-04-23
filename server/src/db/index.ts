@@ -8,6 +8,9 @@ import {UserSchema} from "./user.model";
 import {LevelSchema} from "./level.model";
 import {WordSchema} from "./word.model";
 import {TopicSchema} from "./topic.model";
+import {UserLevelSchema} from "./user-level.model";
+import {UserTopicSchema} from "./user-topic.model";
+import {UserWordSchema} from "./user-word.model";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,6 +32,9 @@ export const User = UserSchema(sequelize);
 export const Level = LevelSchema(sequelize);
 export const Topic = TopicSchema(sequelize);
 export const Word = WordSchema(sequelize);
+export const UserLevel = UserLevelSchema(sequelize);
+export const UserTopic = UserTopicSchema(sequelize);
+export const UserWord = UserWordSchema(sequelize);
 
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
