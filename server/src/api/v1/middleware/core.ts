@@ -15,6 +15,20 @@ export const isID = (req: any, res: any, next: any) => {
     next()
 }
 
+export const isUUID = (req: any, res: any, next: any) => {
+    const validationSchema = joi.object({
+        uuid: joi.string().required().error(() => new Error('UUID is required')),
+    })
+    const validator = validationSchema.validate({
+        uuid: req.query.uuid,
+    }, {abortEarly: true});
+
+    if (validator.error) return res.status(400).json({message: validator.error.message});
+
+    next()
+}
+
+
 // UNIVERSAL REST
 export const rest = async (req: any, res: any, next: any) => {
     if (!req.entity) return res.status(404).send("No entity found as middleware.");
