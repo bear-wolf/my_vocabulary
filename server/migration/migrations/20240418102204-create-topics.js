@@ -9,6 +9,9 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true
       },
+      level_uuid: {
+        type: Sequelize.DataTypes.STRING(36)
+      },
       uuid: {
         type: Sequelize.DataTypes.STRING(36)
       },
