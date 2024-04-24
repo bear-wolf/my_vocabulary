@@ -1,7 +1,7 @@
-import {Level, Topic} from '../../../../db/index';
+import {Topic} from '../../../../db/index';
 
 export const getList = async (req: any, res: any, next: any) => {
-    const list = await Topic.findAll()
+    const list = await Topic.findAll({where: {level_uuid: req.query.level_uuid}});
 
     res
         .status(200)
@@ -17,7 +17,7 @@ export const getByID = async (req: any, res: any, next: any) => {
 }
 
 export const removeByID = async (req: any, res: any, next: any) => {
-    await Topic.destroy({ where: { id: req.params.id } });
+    await Topic.destroy({where: {id: req.params.id}});
 
     res.status(200).json({})
 }

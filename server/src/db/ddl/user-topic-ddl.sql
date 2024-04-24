@@ -12,6 +12,7 @@ CREATE TABLE user_topic (
   level_uuid VARCHAR(36) NOT NULL,
   topic_uuid VARCHAR(36) NOT NULL,
   status Status DEFAULT 0,
+  progress TEXT[],
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
 );

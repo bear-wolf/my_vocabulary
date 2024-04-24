@@ -36,8 +36,11 @@ export const userTopicAttributes = {
         allowNull: false
     },
     status: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         default: 0 // 0 -> closed; 1 -> completed
+    },
+    progress: {
+        type: DataTypes.ARRAY(DataTypes.STRING)
     },
     created_at: {
         type: DataTypes.DATE,
@@ -52,7 +55,7 @@ export const userTopicAttributes = {
 export const UserTopicSchema = (sequelize: Sequelize) => {
     UserTopicModel.init(userTopicAttributes, {
         sequelize,
-        tableName: 'UserLevel',
+        tableName: 'UserTopics',
         timestamps: false
     });
     UserTopicModel.sync();

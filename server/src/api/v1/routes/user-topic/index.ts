@@ -8,8 +8,8 @@ const router = express.Router();
 router.get('/list', getUserTopicList);
 router.get('/', getUserTopicByID);
 router.post('/', createUserTopic);
-router.put('/:id', isID, updateUserTopic);
-router.delete('/:id', removeByID);
+router.put('/:id', updateUserTopic);
+router.delete('/:id',isID, removeByID);
 
 export default router;
 

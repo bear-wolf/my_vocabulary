@@ -20,6 +20,9 @@ export const topicAttributes= {
     uuid: {
         type: DataTypes.STRING(100)
     },
+    level_uuid: {
+        type: DataTypes.STRING(36)
+    },
     title: {
         type: DataTypes.STRING(255),
         allowNull: false

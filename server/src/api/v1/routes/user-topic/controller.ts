@@ -1,4 +1,5 @@
 import {UserLevel, UserTopic} from "../../../../db/index";
+import {v4} from "uuid";
 
 export const removeByID = async (req: any, res: any, next: any) => {
     await UserLevel.destroy({where: {id: req.params.id}});
@@ -7,7 +8,9 @@ export const removeByID = async (req: any, res: any, next: any) => {
 }
 
 export const getUserTopicList = async (req: any, res: any, next: any) => {
-    const list = await UserTopic.findAll({ where: {user_uuid: req.params.user_uuid}});
+    const list = await UserTopic.findAll({where: {user_uuid: req.query.uuid}});
+
+    if (!(list || []).length) return res.status(404).json({message: `No user topic found.`});
 
     res
         .status(200)
@@ -16,42 +19,60 @@ export const getUserTopicList = async (req: any, res: any, next: any) => {
 
 
 export const getUserTopicByID = async (req: any, res: any, next: any) => {
-    const list = await UserTopic.findAll({where: {
+    const list = await UserTopic.findAll({
+        where: {
             id: req.params.id,
-            user_uuid: req.params.user_uuid
-        }});
+            user_uuid: req.query.user_uuid
+        }
+    });
 
-    if (!list) return res.status(404).json({message: 'No user-level found'});
+    if (!(list || []).length) return res.status(404).json({message: 'No user-level found'});
 
     res
         .status(200)
-        .json(list || {})
+        .json(list)
 }
 
 export const createUserTopic = async (req: any, res: any, next: any) => {
-    const userTopic = new UserTopic({})
+    if (!req.body.user_uuid) return res.status(400).json({err: 'No user uuid'});
 
+    let userTopic;
     try {
-        await userTopic.save()
+        userTopic = await UserTopic.create({
+            uuid: v4(),
+            user_uuid: req.body.user_uuid,
+            level_uuid: req.body.level_uuid,
+            topic_uuid: req.body.topic_uuid,
+            status: 0,
+            progress: [],
+            created_at: Date.now()
+        });
     } catch (err) {
         return res.status(400).json({err: err})
     }
 
     res
         .status(200)
-        .json({})
+        .json(userTopic)
 }
 
 export const updateUserTopic = async (req: any, res: any, next: any) => {
-    const userTopic = new UserTopic({})
+    let userTopic
 
     try {
-        await userTopic.save()
+        await UserTopic.update({
+            progress: req.body.progress,
+            updated_at: Date.now(),
+            status: 1
+        }, {
+            where: {id: req.params.id}
+        });
+        userTopic = await UserTopic.findOne({where: {id: req.params.id}})
     } catch (err) {
         return res.status(400).json({err: err})
     }
 
     res
         .status(200)
-        .json({})
+        .json(userTopic)
 }
