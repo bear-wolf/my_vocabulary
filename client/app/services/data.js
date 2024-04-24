@@ -16,8 +16,8 @@ export default class Data extends Service {
   }
 
   @action
-  async getTopicList() {
-    return await axios.get(`${ENV.API_URL}/topic/list`)
+  async getTopicList(level_uuid) {
+    return await axios.get(`${ENV.API_URL}/topic/list?level_uuid=${level_uuid}`).then(response => response.data)
   }
 
   @action

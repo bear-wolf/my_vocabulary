@@ -30,14 +30,21 @@ export default class User extends Service {
   }
 
   @action
-  async getUserTopicByID(ID) {
-    return await axios.get(`${ENV.API_URL}/user-topic/${ID}`)
+  async getUserTopicByID(UUID) {
+    return await axios.get(`${ENV.API_URL}/user-topic/list?uuid=${UUID}`)
+          .then((response) => response.data)
   }
 
   @action
   async createUserTopic(data) {
     return await axios.post(`${ENV.API_URL}/user-topic/`, data)
                       .then((response) => response.data)
+  }
+
+  @action
+  async updateUserTopic(ID, data) {
+    return await axios.put(`${ENV.API_URL}/user-topic/${ID}`, data)
+      .then((response) => response.data)
   }
 
   @action

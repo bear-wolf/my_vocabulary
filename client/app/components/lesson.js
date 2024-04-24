@@ -10,6 +10,7 @@ export default class LessonComponent extends Component {
 
   @tracked client = null;
   @tracked userLevels = [];
+  @tracked userTopics = [];
   @tracked levels = [];
   @tracked topics = [];
   @tracked words = [];
@@ -37,11 +38,24 @@ export default class LessonComponent extends Component {
     super(...arguments);
 
     this.getUserByID()
-      .then(() => {
-        this.getUserLesson()
+      .then(async () => {
+        this.getLevels().then(() => {
+          Promise.all([
+            this.getUserTopic(),
+            this.getUserLevel(),
+            this.getUserTopic()
+          ])
+            .then(() => {
+              if (!this.topics.length) return;
+              if (!this.userTopics.length) {
+                  this.createUserTopic(0)
+                  return;
+              }
+              this.setActiveTopic(this.userTopics.length)
+            })
+            .catch(this.error.bind(this))
+        })
       });
-    this.getLevels()
-    this.getTopics()
   }
 
   showMessage(message, timeout) {
@@ -53,31 +67,60 @@ export default class LessonComponent extends Component {
     console.log('ERROR', err)
   }
 
+  @action
+  setWordStatus(word) {
+    const activeTopic = this.topics.find(topic => topic.active)
+    const userTopic = this.userTopics.find(topic => topic.topic_uuid === activeTopic.uuid)
+    let progress = Array.from(new Set([
+        ...userTopic.progress.toString(),
+      word.id.toString()
+    ]))
+
+    this.user.updateUserTopic(activeTopic.id, {
+      ...activeTopic,
+      level_uuid: activeTopic.level_uuid,
+      topic_uuid: userTopic.topic_uuid,
+      user_uuid: this.user.uuid,
+      progress
+    })
+      .then((data) => {
+        console.log('r', data)
+      })
+      .catch(this.error)
+  }
 
   setUserActiveLevel(index) {
     // convert variable because ember view not rendering
-    const levels = this.levels;
+    if (!this.levels.length) return;
 
-    levels.map(item => item.active = false);
-    levels[index || 0].active = true;
+    const levels = this.levels.map((item, _index) => {
+        item.active = _index === index ? !item.active : false
+        return Object.assign(item);
+    });
 
-    this.levels = Object.assign(levels);
-  }
-
-  @action
-  getSound(word_id) {
-    console.log('getSound()', word_id);
+    this.levels = [];
+    setTimeout(() => {
+      this.levels = Object.assign(levels);
+      this.getTopics(levels[index || 0].uuid)
+    })
   }
 
   @action
   setActiveTopic(index) {
-    return this.data.getWordsByTopicID(this.topics[index].uuid)
-      .then((list) => {
-        this.words = list
-        console.log('this.words', this.words)
-        //this.updateLevelsToUser()
-      })
-      .catch(this.error)
+    //TODO: for update - crutch
+    const topics = this.topics.map((item, _index) => {
+      item.active = _index === index ? !item.active : false
+      return Object.assign(item)
+    });
+    this.topics = [];
+    setTimeout(() => {
+      this.topics = topics;
+      this.data.getWordsByTopicID(this.topics[index].uuid)
+        .then((list) => {
+          this.words = list;
+        })
+        .catch(this.error)
+    });
   }
 
   @action
@@ -88,43 +131,61 @@ export default class LessonComponent extends Component {
         return this.showMessage('Спочатку пройдіть рівень вище 50%', 5000);
     }
 
-    return this.createUserLevel({
-      level_uuid: levelUUID
-    })
+    return this.createUserLevel({level_uuid: levelUUID})
       .then(() => this.setUserActiveLevel(index))
   }
 
   getUserByID() {
     const params = this.query();
     return this.user.getUserByID(params.user_id)
-      .then((user) => {
-        this.client = user
-        console.log('USER', this.client);
-      })
+      .then((user) => this.client = user)
       .catch(this.error)
   }
 
-  getUserLesson() {
-    const params = this.query();
-    console.log(params);
+  getUserLevel() {
     const _this = this
-
-    this.user.getUserLevelListByID(this.client.uuid)
+    return this.user.getUserLevelListByID(this.client.uuid)
       .then((list) => {
-        if (!list.length) {
-          this.setActiveLevel(_this.levels[0].uuid, 0)
-            .then(() => this.setActiveTopic(0))
-          return;
-        }
-        this.userLevels = list;
-        _this.updateLevelsToUser();
+        _this.userLevels = list;
+        _this.updateUserLevels();
         _this.setUserActiveLevel()
       })
       .catch(this.error)
   }
 
-  updateLevelsToUser() {
+  createUserTopic(index) {
+    const activeLevel = this.levels.find(level => level.active)
+    const activeTopic = this.topics[index || 0];
+
+    if (!activeLevel) return;
+    activeTopic.active = true;
+    this.topics[index || 0].active = true;
+
+    //TODO: for update - crutch
+    const listTopics = this.topics
+    this.topics = Object.assign(listTopics);
+
+    this.user.createUserTopic({
+      user_uuid: this.client.uuid,
+      level_uuid: activeLevel.uuid,
+      topic_uuid: activeTopic.uuid,
+    })
+      .then((object) => {
+        debugger
+        this.userTopics = [...(this.userTopics), object]
+      })
+      .catch(this.error)
+  }
+
+  getUserTopic() {
+    return this.user.getUserTopicByID(this.client.uuid)
+      .then((list) => this.userTopics = list)
+      .catch(this.error.bind(this))
+  }
+
+  updateUserLevels() {
     const levels = this.levels;
+
     (this.userLevels || []).map((item) => {
       const level = levels.find((level) => level.uuid === item.level_uuid)
 
@@ -134,7 +195,6 @@ export default class LessonComponent extends Component {
     })
     // WAS problem with update ember state (rendering view)
     this.levels = levels;
-    console.log('levels', this.levels);
   }
 
   createUserLevel(options) {
@@ -142,30 +202,25 @@ export default class LessonComponent extends Component {
     return this.user.createUserLevel(options)
       .then((userLevel) => {
         this.userLevels = userLevel
-        this.updateLevelsToUser()
+        this.updateUserLevels()
       })
       .catch(this.error)
   }
 
   getLevels() {
-    this.data.getLevelList()
-      .then((response) => {
-        this.levels = response.data.map(level => {
-          level.status = 0;
-          return level;
-        });
-      })
+    return this.data.getLevelList()
+      .then((response) => this.levels = response.data)
       .catch(this.error)
   }
 
-  getTopics() {
-    this.data.getTopicList()
-      .then((response) => {
-        this.topics = response.data.map((topic, index) => {
-          topic.status = 'completed';
-          topic.active = index === 0;
-          return topic;
-        });
+  getTopics(level_uuid) {
+    return this.data.getTopicList(level_uuid)
+      .then((list) => {
+        this.topics = list;
+        // this.topics = Ember.A([])
+        // response.map(item => {
+        //   this.topics.push(new EmberObject(item))
+        // })
       })
       .catch(this.error)
   }
