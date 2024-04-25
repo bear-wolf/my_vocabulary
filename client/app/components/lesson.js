@@ -40,20 +40,8 @@ export default class LessonComponent extends Component {
     this.getUserByID()
       .then(async () => {
         this.getLevels().then(() => {
-          Promise.all([
-            this.getUserTopic(),
-            this.getUserLevel(),
-            this.getUserTopic()
-          ])
-            .then(() => {
-              if (!this.topics.length) return;
-              if (!this.userTopics.length) {
-                  this.createUserTopic(0)
-                  return;
-              }
-              this.setActiveTopic(this.userTopics.length)
-            })
-            .catch(this.error.bind(this))
+          this.getUserLevel()
+          this.getUserTopic()
         })
       });
   }
@@ -76,15 +64,16 @@ export default class LessonComponent extends Component {
       word.id.toString()
     ]))
 
-    this.user.updateUserTopic(activeTopic.id, {
-      ...activeTopic,
+    this.user.updateUserTopic(userTopic.id, {
+      ...userTopic,
       level_uuid: activeTopic.level_uuid,
       topic_uuid: userTopic.topic_uuid,
       user_uuid: this.user.uuid,
       progress
     })
       .then((data) => {
-        console.log('r', data)
+        userTopic.progress = data.progress;
+        userTopic.updated_at = data.updated_at;
       })
       .catch(this.error)
   }
@@ -92,7 +81,7 @@ export default class LessonComponent extends Component {
   setUserActiveLevel(index) {
     // convert variable because ember view not rendering
     if (!this.levels.length) return;
-
+    index = index || 0;
     const levels = this.levels.map((item, _index) => {
         item.active = _index === index ? !item.active : false
         return Object.assign(item);
@@ -108,6 +97,7 @@ export default class LessonComponent extends Component {
   @action
   setActiveTopic(index) {
     //TODO: for update - crutch
+    index = index || 0;
     const topics = this.topics.map((item, _index) => {
       item.active = _index === index ? !item.active : false
       return Object.assign(item)
@@ -125,14 +115,24 @@ export default class LessonComponent extends Component {
 
   @action
   setActiveLevel(levelUUID, index) {
-    if (this.userLevels.length <= index) {
-      const cell = this.userLevels[this.userLevels.length - 1];
-      if (!this.userLevels.length && index >= 1 || cell && cell.progress < 50)
-        return this.showMessage('Спочатку пройдіть рівень вище 50%', 5000);
-    }
+    // if (this.userLevels.length <= index) {
+    //   const cell = this.userLevels[this.userLevels.length - 2];
+    //   if (!this.userLevels.length && index >= 1 || cell && cell.progress < 50)
+    //     return this.showMessage('Спочатку пройдіть рівень вище 50%', 5000);
+    // }
 
     return this.createUserLevel({level_uuid: levelUUID})
-      .then(() => this.setUserActiveLevel(index))
+      .then(() => {
+        this.setUserActiveLevel(index)
+        this.getTopics(levelUUID).then((list) => {
+          // Set topic active
+          if (!this.userTopics.length) {
+            this.createUserTopic(0)
+            return
+          }
+          this.setActiveTopic(this.userTopics.length);
+        })
+      })
   }
 
   getUserByID() {
@@ -148,7 +148,10 @@ export default class LessonComponent extends Component {
       .then((list) => {
         _this.userLevels = list;
         _this.updateUserLevels();
-        _this.setUserActiveLevel()
+
+        // Set active level
+        const levelUUID = _this.levels[list.length].uuid;
+        _this.setActiveLevel(levelUUID, list.length)
       })
       .catch(this.error)
   }
@@ -215,13 +218,7 @@ export default class LessonComponent extends Component {
 
   getTopics(level_uuid) {
     return this.data.getTopicList(level_uuid)
-      .then((list) => {
-        this.topics = list;
-        // this.topics = Ember.A([])
-        // response.map(item => {
-        //   this.topics.push(new EmberObject(item))
-        // })
-      })
+      .then((list) => this.topics = list)
       .catch(this.error)
   }
 };
