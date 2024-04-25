@@ -33,53 +33,37 @@ levels.map(item => {
 })
 
 let topics = [{
-        uuid: v4(),
         title: 'Lesson 1 - Hello 1'
     },
     {
-        uuid: v4(),
         title: 'Lesson 2 - Hello 2'
     }, {
-        uuid: v4(),
         title: 'Lesson 3 - My School 1'
     }, {
-        uuid: v4(),
         title: 'Lesson 4 - My School 2'
     }, {
-        uuid: v4(),
         title: 'Lesson 5 - My Toys 1'
     }, {
-        uuid: v4(),
         title: 'Lesson 6 - My Toys 2'
     }, {
-        uuid: v4(),
         title: 'Lesson 7 - My Toys 3'
     }, {
-        uuid: v4(),
         title: 'Lesson 8 - My Family 1'
     }, {
-        uuid: v4(),
         title: 'Lesson 9 - My Family 2'
     }, {
-        uuid: v4(),
         title: 'Lesson 10 - Revision 1'
     }, {
-        uuid: v4(),
         title: 'Lesson 11 - My Animals 1'
     }, {
-        uuid: v4(),
         title: 'Lesson 12 - My Animals 2'
     }, {
-        uuid: v4(),
         title: 'Lesson 13 - My Toys 2'
     }, {
-        uuid: v4(),
         title: 'Lesson 14 - My Toys 3'
     }, {
-        uuid: v4(),
         title: 'Lesson 15 - My Family 3'
     }, {
-        uuid: v4(),
         title: 'Lesson 16 - Revision 2'
     }]
 
@@ -87,51 +71,59 @@ const topicList = [
     ...(topics.map((topic) => {
         return {
             ...topic,
+            uuid: v4(),
             level_uuid: levels[0].uuid
         }
     })),
     ...(topics.map((topic) => {
         return {
             ...topic,
+            uuid: v4(),
             level_uuid: levels[1].uuid
         }
     })),
     ...(topics.map((topic) => {
         return {
             ...topic,
+            uuid: v4(),
             level_uuid: levels[2].uuid
         }
     })),
     ...(topics.map((topic) => {
         return {
             ...topic,
+            uuid: v4(),
             level_uuid: levels[3].uuid
         }
     })),
     ...(topics.map((topic) => {
         return {
             ...topic,
+            uuid: v4(),
             level_uuid: levels[4].uuid
         }
     })),
     ...(topics.map((topic) => {
         return {
             ...topic,
+            uuid: v4(),
             level_uuid: levels[5].uuid
         }
     })),
     ...(topics.map((topic) => {
         return {
             ...topic,
+            uuid: v4(),
             level_uuid: levels[6].uuid
         }
     })),
     ...(topics.map((topic) => {
         return {
             ...topic,
+            uuid: v4(),
             level_uuid: levels[7].uuid
         }
-    })),
+    }))
 ]
 
 topicList.map(item => {
@@ -149,7 +141,6 @@ let words = [{
         voice: JSON.stringify({})
     },
     {
-        topic_uuid: topicList[0].uuid,
         picture: 'svgs/words/cat.svg',
         original: 'Cat',
         translate: JSON.stringify({
@@ -159,7 +150,6 @@ let words = [{
         voice: JSON.stringify({})
     },
     {
-        topic_uuid: topicList[0].uuid,
         picture: 'svgs/words/cow.svg',
         original: 'Cow',
         translate: JSON.stringify({
@@ -169,7 +159,6 @@ let words = [{
         voice: JSON.stringify({})
     },
     {
-        topic_uuid: topicList[0].uuid,
         picture: 'svgs/words/deer.svg',
         original: 'Deer',
         translate: JSON.stringify({
@@ -179,7 +168,6 @@ let words = [{
         voice: JSON.stringify({})
     },
     {
-        topic_uuid: topicList[0].uuid,
         picture: 'svgs/words/fox.svg',
         original: 'Fox',
         translate: JSON.stringify({
@@ -189,7 +177,6 @@ let words = [{
         voice: JSON.stringify({})
     },
     {
-        topic_uuid: topicList[0].uuid,
         picture: 'svgs/words/monkey.svg',
         original: 'Monkey',
         translate: JSON.stringify({
@@ -199,20 +186,144 @@ let words = [{
         voice: JSON.stringify({})
     },
     {
-        topic_uuid: topicList[0].uuid,
         picture: 'svgs/words/squirrel.svg',
-        original: 'Білка',
+        original: 'Squirrel',
         translate: JSON.stringify({
-            ua: 'Корова',
-            en: 'Білка'
+            ua: 'Білка',
+            en: 'Squirrel'
         }),
         voice: JSON.stringify({})
     }
 ]
-words.map(item => {
-    item.created_at = Date.now().toString()
-    item.uuid = v4()
-})
+const wordList = [
+    ...(words.map(item => {
+        return {
+            ...item,
+            uuid: v4(),
+            topic_uuid: topicList[0].uuid,
+            created_at: Date.now().toString()
+        }
+    })),
+    ...(words.map(item => {
+        return {
+            ...item,
+            uuid: v4(),
+            topic_uuid: topicList[1].uuid,
+            created_at: Date.now().toString()
+        }
+    })),
+    ...(words.map(item => {
+        return {
+            ...item,
+            uuid: v4(),
+            topic_uuid: topicList[2].uuid,
+            created_at: Date.now().toString()
+        }
+    })),
+    ...(words.map(item => {
+        return {
+            ...item,
+            uuid: v4(),
+            topic_uuid: topicList[3].uuid,
+            created_at: Date.now().toString()
+        }
+    })),
+    ...(words.map(item => {
+        return {
+            ...item,
+            uuid: v4(),
+            topic_uuid: topicList[4].uuid,
+            created_at: Date.now().toString()
+        }
+    })),
+    ...(words.map(item => {
+        return {
+            ...item,
+            uuid: v4(),
+            topic_uuid: topicList[5].uuid,
+            created_at: Date.now().toString()
+        }
+    })),
+    ...(words.map(item => {
+        return {
+            ...item,
+            uuid: v4(),
+            topic_uuid: topicList[6].uuid,
+            created_at: Date.now().toString()
+        }
+    })),
+    ...(words.map(item => {
+        return {
+            uuid: v4(),
+            topic_uuid: topicList[7].uuid,
+            created_at: Date.now().toString()
+        }
+    })),
+    ...(words.map(item => {
+        return {
+            ...item,
+            uuid: v4(),
+            topic_uuid: topicList[8].uuid,
+            created_at: Date.now().toString()
+        }
+    })),
+    ...(words.map(item => {
+        return {
+            ...item,
+            uuid: v4(),
+            topic_uuid: topicList[9].uuid,
+            created_at: Date.now().toString()
+        }
+    })),
+    ...(words.map(item => {
+        return {
+            ...item,
+            uuid: v4(),
+            topic_uuid: topicList[10].uuid,
+            created_at: Date.now().toString()
+        }
+    })),
+    ...(words.map(item => {
+        return {
+            ...item,
+            uuid: v4(),
+            topic_uuid: topicList[11].uuid,
+            created_at: Date.now().toString()
+        }
+    })),
+    ...(words.map(item => {
+        return {
+            ...item,
+            uuid: v4(),
+            topic_uuid: topicList[12].uuid,
+            created_at: Date.now().toString()
+        }
+    })),
+    ...(words.map(item => {
+        return {
+            ...item,
+            uuid: v4(),
+            topic_uuid: topicList[13].uuid,
+            created_at: Date.now().toString()
+        }
+    })),
+    ...(words.map(item => {
+        return {
+            ...item,
+            uuid: v4(),
+            topic_uuid: topicList[14].uuid,
+            created_at: Date.now().toString()
+        }
+    })),
+    ...(words.map(item => {
+        return {
+            ...item,
+            uuid: v4(),
+            topic_uuid: topicList[15].uuid,
+            created_at: Date.now().toString()
+        }
+    }))
+]
 
 
 /** @type {import('sequelize-cli').Migration} */
@@ -220,11 +331,11 @@ module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.bulkInsert('Levels', levels);
         await queryInterface.bulkInsert('Topics', topicList);
-        await queryInterface.bulkInsert('Words', words);
+        await queryInterface.bulkInsert('Words', wordList);
     },
     async down(queryInterface, Sequelize) {
         await queryInterface.bulkDelete('Levels', levels, {});
-        await queryInterface.bulkDelete('Topics', topics, {});
-        await queryInterface.bulkDelete('Words', words, {});
+        await queryInterface.bulkDelete('Topics', topicList, {});
+        await queryInterface.bulkDelete('Words', wordList, {});
     }
 };

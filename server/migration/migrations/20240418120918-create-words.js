@@ -21,8 +21,7 @@ module.exports = {
         allowNull: true
       },
       original: {
-        type: DataTypes.STRING(255),
-        allowNull: false
+        type: DataTypes.STRING(255)
       },
       translate: {
         type: DataTypes.JSONB,
