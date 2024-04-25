@@ -32,10 +32,10 @@
       <div class="title mb-3">Теми</div>
       <ul class="list">
         {{#each this.topics as |topic index|}}
-          <li class="{{if topic.status 'completed' 'pl-20'}} {{if topic.active 'active' ''}}"
+          <li class="{{if (eq topic.status 1) 'completed' 'pl-20'}} {{if topic.active 'active' ''}}"
               onclick={{action 'setActiveTopic' index}}>
             <div class="{{if topic.status 'pl-20' ''}}">
-              <!--              {{#if topic.active}} <i class="icon icon-completed-white"></i> {{/if}}-->
+              <i class="icon icon-completed{{if topic.active '-white' ''}}"></i>
               {{topic.title}}
             </div>
           </li>

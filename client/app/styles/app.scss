@@ -30,7 +30,8 @@ body {
 .relative {
   position: relative;
 }
-.cursor-pointer{
+
+.cursor-pointer {
   cursor: pointer;
 }
 
@@ -174,10 +175,18 @@ body {
         display: flex;
         height: 100%;
         align-items: center;
+
+        i {
+          display: none
+        }
       }
 
       &.completed {
         color: #14001A;
+
+        i {
+          display: block
+        }
       }
 
       .icon-completed,
@@ -199,12 +208,12 @@ body {
           max-width: 48px;
         }
 
-        .sound{
+        .sound {
           width: 32px;
           height: 100%;
-          cursor: pointer!important;
+          cursor: pointer !important;
 
-          .icon{
+          .icon {
             top: 50%;
             margin-top: -12px;
           }

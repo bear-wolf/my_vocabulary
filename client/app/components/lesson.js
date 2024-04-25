@@ -58,9 +58,15 @@ export default class LessonComponent extends Component {
   @action
   setWordStatus(word) {
     const activeTopic = this.topics.find(topic => topic.active)
-    const userTopic = this.userTopics.find(topic => topic.topic_uuid === activeTopic.uuid)
+    let userTopic = this.userTopics.find(topic => topic.topic_uuid === activeTopic.uuid)
+    let userTopicIndex = this.userTopics.findIndex(topic => topic.topic_uuid === activeTopic.uuid)
+
+    if (!userTopic) {
+      return new Error('userTopic is not created before')
+    }
+
     let progress = Array.from(new Set([
-        ...userTopic.progress.toString(),
+      ...userTopic.progress,
       word.id.toString()
     ]))
 
@@ -74,8 +80,28 @@ export default class LessonComponent extends Component {
       .then((data) => {
         userTopic.progress = data.progress;
         userTopic.updated_at = data.updated_at;
+
+        if (userTopic.progress.length >= this.words.length) {
+          this.user.updateUserTopic(userTopic.id, {
+            status: 1,
+          })
+            .then(data => this.userTopics[userTopicIndex] = data)
+            .then(this.syncUserTopicWithTopic.bind(this));
+        }
       })
       .catch(this.error)
+  }
+
+  syncUserTopicWithTopic() {
+    const topics = this.topics.map(_topic => {
+      const behaviour = this.userTopics.find(topic => topic.topic_uuid === _topic.uuid) || {}
+      _topic.status = behaviour.status || 0;
+      return _topic
+    })
+
+    this.topics = []
+    //TODO: for update - crutch
+    setTimeout(() => this.topics = topics)
   }
 
   setUserActiveLevel(index) {
@@ -83,14 +109,15 @@ export default class LessonComponent extends Component {
     if (!this.levels.length) return;
     index = index || 0;
     const levels = this.levels.map((item, _index) => {
-        item.active = _index === index ? !item.active : false
-        return Object.assign(item);
+      item.active = _index === index ? !item.active : false
+      return Object.assign(item);
     });
 
     this.levels = [];
     setTimeout(() => {
       this.levels = Object.assign(levels);
       this.getTopics(levels[index || 0].uuid)
+        .then(this.syncUserTopicWithTopic.bind(this))
     })
   }
 
@@ -98,39 +125,91 @@ export default class LessonComponent extends Component {
   setActiveTopic(index) {
     //TODO: for update - crutch
     index = index || 0;
+
+    if (index) {
+      const cell = this.topics[index - 1];
+      if (!cell || !cell.status) {
+        this.showMessage('Спочатку пройдіть тему');
+        return;
+      }
+    }
+
     const topics = this.topics.map((item, _index) => {
       item.active = _index === index ? !item.active : false
-      return Object.assign(item)
+      return item
     });
+
     this.topics = [];
     setTimeout(() => {
       this.topics = topics;
-      this.data.getWordsByTopicID(this.topics[index].uuid)
-        .then((list) => {
-          this.words = list;
+      // Create userTopic if not exist
+      const activeTopic = this.topics.find(topic => topic.active)
+      const userTopic = activeTopic && this.userTopics.find(topic => topic.topic_uuid === activeTopic.uuid)
+      this.calculateUserActiveLevel();
+      if (!userTopic) {
+        this.createUserTopic(index).then(data => {
+          this.data.getWordsByTopicID(this.topics[index].uuid)
+            .then((list) => this.words = list)
+            .catch(this.error.bind(this))
         })
-        .catch(this.error)
+        return;
+      }
+      this.data.getWordsByTopicID(this.topics[index].uuid)
+        .then((list) => this.words = list)
+        .catch(this.error.bind(this))
     });
+  }
+
+  calculateUserActiveLevel() {
+    const topicCompletedCount = this.topics.filter(topic => topic.status).length
+    let progress = (this.topics.length / 100); // percent
+    progress *= topicCompletedCount; // percent
+    const activeLevelIndex = this.levels.findIndex((level) => level.active)
+    this.userLevels[activeLevelIndex].progress = Math.floor(progress);
+    this.syncUserLevels();
   }
 
   @action
   setActiveLevel(levelUUID, index) {
-    // if (this.userLevels.length <= index) {
-    //   const cell = this.userLevels[this.userLevels.length - 2];
-    //   if (!this.userLevels.length && index >= 1 || cell && cell.progress < 50)
-    //     return this.showMessage('Спочатку пройдіть рівень вище 50%', 5000);
+    if (index) {
+      const cell = this.userLevels[index - 1];
+      if (!cell || cell.progress < 50)
+        return this.showMessage('Спочатку пройдіть рівень вище 50%', 5000);
+    }
+    //const activeLevel = this.levels.find((level) => level.active && level.uuid === levelUUID)
+    // if (activeLevel) {
+    //   this.getTopics(levelUUID)
+    //     .then((list) => {
+    //       // Set topic active
+    //       if (!this.userTopics.length) {
+    //         this.createUserTopic(0)
+    //         return
+    //       }
+    //       const userTopic = this.userTopics.find(topic => topic.level_uuid === levelUUID)
+    //       if (!userTopic) {
+    //         this.createUserTopic(index);
+    //         return;
+    //       }
+    //       this.setActiveTopic(0);
+    //     })
+    //   return;
     // }
 
     return this.createUserLevel({level_uuid: levelUUID})
       .then(() => {
-        this.setUserActiveLevel(index)
+        this.setUserActiveLevel(index);
         this.getTopics(levelUUID).then((list) => {
           // Set topic active
           if (!this.userTopics.length) {
             this.createUserTopic(0)
             return
           }
-          this.setActiveTopic(this.userTopics.length);
+          const userTopic = this.userTopics.find(topic => topic.level_uuid === levelUUID)
+          if (!userTopic) {
+            this.createUserTopic(index);
+            return;
+          }
+          this.setActiveTopic(0);
         })
       })
   }
@@ -147,11 +226,10 @@ export default class LessonComponent extends Component {
     return this.user.getUserLevelListByID(this.client.uuid)
       .then((list) => {
         _this.userLevels = list;
-        _this.updateUserLevels();
+        _this.syncUserLevels();
 
         // Set active level
-        const levelUUID = _this.levels[list.length].uuid;
-        _this.setActiveLevel(levelUUID, list.length)
+        _this.setActiveLevel(_this.levels[0].uuid, 0)
       })
       .catch(this.error)
   }
@@ -160,7 +238,7 @@ export default class LessonComponent extends Component {
     const activeLevel = this.levels.find(level => level.active)
     const activeTopic = this.topics[index || 0];
 
-    if (!activeLevel) return;
+    if (!activeLevel) return new Promise((r, e) => e());
     activeTopic.active = true;
     this.topics[index || 0].active = true;
 
@@ -168,15 +246,17 @@ export default class LessonComponent extends Component {
     const listTopics = this.topics
     this.topics = Object.assign(listTopics);
 
-    this.user.createUserTopic({
+    // Check if userTopic exist
+    if (this.userTopics.find(topic => topic.topic_uuid === activeTopic.uuid)) {
+      return;
+    }
+
+    return this.user.createUserTopic({
       user_uuid: this.client.uuid,
       level_uuid: activeLevel.uuid,
       topic_uuid: activeTopic.uuid,
     })
-      .then((object) => {
-        debugger
-        this.userTopics = [...(this.userTopics), object]
-      })
+      .then((object) => this.userTopics = [...this.userTopics, object])
       .catch(this.error)
   }
 
@@ -186,8 +266,8 @@ export default class LessonComponent extends Component {
       .catch(this.error.bind(this))
   }
 
-  updateUserLevels() {
-    const levels = this.levels;
+  syncUserLevels() {
+    const levels = Object.assign(this.levels);
 
     (this.userLevels || []).map((item) => {
       const level = levels.find((level) => level.uuid === item.level_uuid)
@@ -195,9 +275,11 @@ export default class LessonComponent extends Component {
       if (!level) return
 
       level.status = 1;
+      level.progress = item.progress;
     })
     // WAS problem with update ember state (rendering view)
-    this.levels = levels;
+    this.levels = [];
+    setTimeout(() => this.levels = Object.assign(levels));
   }
 
   createUserLevel(options) {
@@ -205,14 +287,17 @@ export default class LessonComponent extends Component {
     return this.user.createUserLevel(options)
       .then((userLevel) => {
         this.userLevels = userLevel
-        this.updateUserLevels()
+        this.syncUserLevels()
       })
       .catch(this.error)
   }
 
   getLevels() {
     return this.data.getLevelList()
-      .then((response) => this.levels = response.data)
+      .then((response) => {
+        this.levels = response.data
+        return response;
+      })
       .catch(this.error)
   }
 
