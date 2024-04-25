@@ -36,7 +36,14 @@ export const getUserTopicByID = async (req: any, res: any, next: any) => {
 export const createUserTopic = async (req: any, res: any, next: any) => {
     if (!req.body.user_uuid) return res.status(400).json({err: 'No user uuid'});
 
-    let userTopic;
+    let userTopic: any = await UserTopic.findAll({ where: {
+            user_uuid: req.body.user_uuid,
+            level_uuid: req.body.level_uuid,
+            topic_uuid: req.body.topic_uuid,
+        }});
+
+    if ((userTopic || []).length) return res.status(404).json({message: `User topic is exist.`});
+
     try {
         userTopic = await UserTopic.create({
             uuid: v4(),
