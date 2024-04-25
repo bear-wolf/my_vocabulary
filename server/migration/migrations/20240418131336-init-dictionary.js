@@ -2,10 +2,9 @@
 const {v4} = require('uuid');
 
 const levels = [{
-    uuid: v4(),
-    title: 'Charlie Preschool 1',
-    created_at: Date.now()
-},
+        title: 'Charlie Preschool 1',
+        created_at: Date.now()
+    },
     {
         title: 'Charlie Preschool 2',
         created_at: Date.now()
@@ -34,9 +33,9 @@ levels.map(item => {
 })
 
 let topics = [{
-    uuid: v4(),
-    title: 'Lesson 1 - Hello 1'
-},
+        uuid: v4(),
+        title: 'Lesson 1 - Hello 1'
+    },
     {
         uuid: v4(),
         title: 'Lesson 2 - Hello 2'
@@ -84,57 +83,73 @@ let topics = [{
         title: 'Lesson 16 - Revision 2'
     }]
 
-topics = [
+const topicList = [
     ...(topics.map((topic) => {
-        topic.level_uuid = levels[0].uuid
-        return topic
+        return {
+            ...topic,
+            level_uuid: levels[0].uuid
+        }
     })),
-    // ...(topics.map((topic) => {
-    //     topic.level_uuid = levels[1].uuid
-    //     return topic
-    // })),
-    // ...(topics.map((topic) => {
-    //     topic.level_uuid = levels[2].uuid
-    //     return topic
-    // })),
-    // ...(topics.map((topic) => {
-    //     topic.level_uuid = levels[3].uuid
-    //     return topic
-    // })),
-    // ...(topics.map((topic) => {
-    //     topic.level_uuid = levels[4].uuid
-    //     return topic
-    // })),
-    // ...(topics.map((topic) => {
-    //     topic.level_uuid = levels[5].uuid
-    //     return topic
-    // })),
-    // ...(topics.map((topic) => {
-    //     topic.level_uuid = levels[6].uuid
-    //     return topic
-    // })),
-    // ...(topics.map((topic) => {
-    //     topic.level_uuid = levels[7].uuid
-    //     return topic
-    // }))
+    ...(topics.map((topic) => {
+        return {
+            ...topic,
+            level_uuid: levels[1].uuid
+        }
+    })),
+    ...(topics.map((topic) => {
+        return {
+            ...topic,
+            level_uuid: levels[2].uuid
+        }
+    })),
+    ...(topics.map((topic) => {
+        return {
+            ...topic,
+            level_uuid: levels[3].uuid
+        }
+    })),
+    ...(topics.map((topic) => {
+        return {
+            ...topic,
+            level_uuid: levels[4].uuid
+        }
+    })),
+    ...(topics.map((topic) => {
+        return {
+            ...topic,
+            level_uuid: levels[5].uuid
+        }
+    })),
+    ...(topics.map((topic) => {
+        return {
+            ...topic,
+            level_uuid: levels[6].uuid
+        }
+    })),
+    ...(topics.map((topic) => {
+        return {
+            ...topic,
+            level_uuid: levels[7].uuid
+        }
+    })),
 ]
 
-topics.map(item => {
+topicList.map(item => {
     item.created_at = Date.now().toString()
 })
 
 let words = [{
-    topic_uuid: levels[0].uuid,
-    picture: 'svgs/words/bear.svg',
-    original: 'Bear',
-    translate: JSON.stringify({
-        ua: 'Ведмідь',
-        en: 'Bear'
-    }),
-    voice: JSON.stringify({})
-},
+        topic_uuid: topicList[0].uuid,
+        picture: 'svgs/words/bear.svg',
+        original: 'Bear',
+        translate: JSON.stringify({
+            ua: 'Ведмідь',
+            en: 'Bear'
+        }),
+        voice: JSON.stringify({})
+    },
     {
-        topic_uuid: topics[0].uuid,
+        topic_uuid: topicList[0].uuid,
         picture: 'svgs/words/cat.svg',
         original: 'Cat',
         translate: JSON.stringify({
@@ -144,7 +159,7 @@ let words = [{
         voice: JSON.stringify({})
     },
     {
-        topic_uuid: topics[0].uuid,
+        topic_uuid: topicList[0].uuid,
         picture: 'svgs/words/cow.svg',
         original: 'Cow',
         translate: JSON.stringify({
@@ -154,7 +169,7 @@ let words = [{
         voice: JSON.stringify({})
     },
     {
-        topic_uuid: topics[0].uuid,
+        topic_uuid: topicList[0].uuid,
         picture: 'svgs/words/deer.svg',
         original: 'Deer',
         translate: JSON.stringify({
@@ -164,7 +179,7 @@ let words = [{
         voice: JSON.stringify({})
     },
     {
-        topic_uuid: topics[0].uuid,
+        topic_uuid: topicList[0].uuid,
         picture: 'svgs/words/fox.svg',
         original: 'Fox',
         translate: JSON.stringify({
@@ -174,7 +189,7 @@ let words = [{
         voice: JSON.stringify({})
     },
     {
-        topic_uuid: topics[0].uuid,
+        topic_uuid: topicList[0].uuid,
         picture: 'svgs/words/monkey.svg',
         original: 'Monkey',
         translate: JSON.stringify({
@@ -184,7 +199,7 @@ let words = [{
         voice: JSON.stringify({})
     },
     {
-        topic_uuid: topics[0].uuid,
+        topic_uuid: topicList[0].uuid,
         picture: 'svgs/words/squirrel.svg',
         original: 'Білка',
         translate: JSON.stringify({
@@ -204,7 +219,7 @@ words.map(item => {
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.bulkInsert('Levels', levels);
-        await queryInterface.bulkInsert('Topics', topics);
+        await queryInterface.bulkInsert('Topics', topicList);
         await queryInterface.bulkInsert('Words', words);
     },
     async down(queryInterface, Sequelize) {
