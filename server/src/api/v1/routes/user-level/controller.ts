@@ -1,4 +1,4 @@
-import {UserLevel} from "../../../../db/index";
+import {UserLevel, UserTopic} from "../../../../db/index";
 import {v4} from 'uuid';
 import joi from "joi";
 
@@ -43,12 +43,15 @@ export const updateUserLevel = async (req: any, res: any, next: any) => {
     if (!userLevel) return res.status(400).json({err: 'No user level found'});
 
     try {
-        userLevel.updated_at = Date.now()
-        await UserLevel.update(userLevel, {
+        userLevel = await UserLevel.update({
+            progress: req.body.progress,
+            updated_at: Date.now()
+        }, {
             where: {
                 id: req.params.id
             }
         })
+        userLevel = await UserLevel.findOne({where: {id: req.params.id}})
     } catch (err) {
         return res.status(400).json({err: err})
     }
