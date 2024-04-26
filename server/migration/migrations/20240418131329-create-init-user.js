@@ -13,7 +13,7 @@ module.exports = {
                 first_name: 'Andrew',
                 last_name: 'Bar',
                 user_name: 'bear-wolf',
-                language: 'EN',
+                language: 'en',
                 email: 'example@example.com',
                 password: await bcrypt.hash('14714711', salt),
                 created_at: new Date()
@@ -23,7 +23,7 @@ module.exports = {
                 first_name: 'Coval',
                 last_name: 'Sergio',
                 user_name: 'cov_sergio',
-                language: 'UA',
+                language: 'ua',
                 email: 'test@example.com',
                 password: await bcrypt.hash('12312311', salt),
                 created_at: new Date()
@@ -33,8 +33,28 @@ module.exports = {
                 first_name: 'Test',
                 last_name: 'Test2',
                 user_name: 'test2',
-                language: 'UA',
+                language: 'ua',
                 email: 'test2@example.com',
+                password: await bcrypt.hash('15915911', salt),
+                created_at: new Date()
+            },
+            {
+                uuid: v4(),
+                first_name: 'Петро',
+                last_name: 'Коваль',
+                user_name: 'petro',
+                language: 'ua',
+                email: 'petro@example.com',
+                password: await bcrypt.hash('15915911', salt),
+                created_at: new Date()
+            },
+            {
+                uuid: v4(),
+                first_name: 'Marta',
+                last_name: 'Vovkivna',
+                user_name: 'MartaV',
+                language: 'UA',
+                email: 'marta@example.com',
                 password: await bcrypt.hash('15915911', salt),
                 created_at: new Date()
             }]);
