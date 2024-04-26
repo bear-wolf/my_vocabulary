@@ -7,7 +7,7 @@ export default class Data extends Service {
 
   @action
   async getLevelList() {
-    return await axios.get(`${ENV.API_URL}/level/list`)
+    return await axios.get(`${ENV.API_URL}/level/list`).then(response => response.data)
   }
 
   @action
