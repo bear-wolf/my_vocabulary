@@ -201,25 +201,7 @@ export default class LessonComponent extends Component {
         return this.showMessage('Спочатку пройдіть рівень вище 40%', 5000);
     }
 
-    if (this.levels.find((level) => level.active && level.uuid === levelUUID)) {
-      const activeTopicIndex = this.topics.findIndex(topic => topic.active)
-      if (activeTopicIndex < 0) {
-        this.getTopics(levelUUID).then(() => {
-          // Set topic active
-          if (!this.userTopics.length) {
-            this.createUserTopic(0).then(() => this.setActiveTopic(0, false))
-            return
-          }
-          const userTopic = this.userTopics.find(topic => topic.level_uuid === levelUUID)
-          if (!userTopic) {
-            this.createUserTopic(index);
-            return;
-          }
-          this.setActiveTopic(0, false);
-        })
-      }
-      return;
-    }
+    if (this.levels.find((level) => level.active && level.uuid === levelUUID)) return;
 
     return this.createUserLevel({level_uuid: levelUUID})
       .then(() => {
