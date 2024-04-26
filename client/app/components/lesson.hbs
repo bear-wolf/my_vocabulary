@@ -54,7 +54,9 @@
               <div class="justify-content-between w-100 d-flex">
                 <div class="d-flex flex-column justify-content-center pl-16">
                   <span class="original">{{word.original}}</span>
-                  <span class="translate">{{word.translate.ua}}</span>
+                  {{#if word.translate}}
+                    <span class="translate">{{word.translate}}</span>
+                  {{/if}}
                 </div>
                 <div class="sound content-center relative">
                   <i class="icon icon-sound"></i>

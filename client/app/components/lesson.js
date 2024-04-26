@@ -48,7 +48,7 @@ export default class LessonComponent extends Component {
 
   showMessage(message, timeout) {
     this.message = message;
-    setTimeout(() => this.message = null, timeout);
+    timeout && setTimeout(() => this.message = null, timeout);
   }
 
   error(err) {
@@ -96,7 +96,6 @@ export default class LessonComponent extends Component {
       _topic.status = behaviour.status || 0;
       return _topic
     })
-    debugger;
     this.calculateUserActiveLevel();
     this.syncUserLevels(() => {
       this.syncUserLevelProgress();
@@ -130,10 +129,14 @@ export default class LessonComponent extends Component {
     if (index) {
       const cell = this.topics[index - 1];
       if (!cell || !cell.status) {
-        this.showMessage('Спочатку пройдіть тему');
+        this.showMessage('Спочатку пройдіть тему', 5000);
         return;
       }
     }
+
+    const isActiveTopic = this.topics.find((topic, _index) => topic.active && _index === index)
+
+    if (isActiveTopic) return;
 
     const topics = this.topics.map((item, _index) => {
       item.active = _index === index ? !item.active : false
@@ -160,7 +163,15 @@ export default class LessonComponent extends Component {
       }
 
       this.data.getWordsByTopicID(activeTopic.uuid)
-        .then((list) => this.words = list)
+        .then((list) => {
+          const params = this.query();
+          this.words = list.map(item => {
+            return {
+              ...item,
+              translate: params.language ? item.translate[params.language] : ''
+            };
+          })
+        })
         .catch(this.error.bind(this))
     });
   }
@@ -173,7 +184,6 @@ export default class LessonComponent extends Component {
     if (activeLevelIndex < 0 ) return
 
     this.userLevels[activeLevelIndex].progress = Math.floor(progress);
-    console.log('progress level', this.userLevels[activeLevelIndex].progress)
   }
 
   syncUserLevelProgress() {
@@ -191,13 +201,30 @@ export default class LessonComponent extends Component {
         return this.showMessage('Спочатку пройдіть рівень вище 40%', 5000);
     }
 
-    if (this.levels.find((level) => level.active && level.uuid === levelUUID))
+    if (this.levels.find((level) => level.active && level.uuid === levelUUID)) {
+      const activeTopicIndex = this.topics.findIndex(topic => topic.active)
+      if (activeTopicIndex < 0) {
+        this.getTopics(levelUUID).then(() => {
+          // Set topic active
+          if (!this.userTopics.length) {
+            this.createUserTopic(0).then(() => this.setActiveTopic(0, false))
+            return
+          }
+          const userTopic = this.userTopics.find(topic => topic.level_uuid === levelUUID)
+          if (!userTopic) {
+            this.createUserTopic(index);
+            return;
+          }
+          this.setActiveTopic(0, false);
+        })
+      }
       return;
+    }
 
     return this.createUserLevel({level_uuid: levelUUID})
       .then(() => {
         this.setUserActiveLevel(index);
-        this.getTopics(levelUUID).then((list) => {
+        this.getTopics(levelUUID).then(() => {
           // Set topic active
           if (!this.userTopics.length) {
             this.createUserTopic(0).then(() => this.setActiveTopic(0, false))
@@ -272,7 +299,6 @@ export default class LessonComponent extends Component {
 
       level.status = 1;
       level.progress = item.progress;
-      debugger;
     })
     // WAS problem with update ember state (rendering view)
     this.levels = [];
