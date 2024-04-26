@@ -33,7 +33,7 @@
       <ul class="list">
         {{#each this.topics as |topic index|}}
           <li class="{{if (eq topic.status 1) 'completed' 'pl-20'}} {{if topic.active 'active' ''}}"
-              onclick={{action 'setActiveTopic' index}}>
+              onclick={{action 'setActiveTopic' index true}}>
             <div class="{{if topic.status 'pl-20' ''}}">
               <i class="icon icon-completed{{if topic.active '-white' ''}}"></i>
               {{topic.title}}

@@ -58,12 +58,10 @@ export default class LessonComponent extends Component {
   @action
   setWordStatus(word) {
     const activeTopic = this.topics.find(topic => topic.active)
-    let userTopic = this.userTopics.find(topic => topic.topic_uuid === activeTopic.uuid)
-    let userTopicIndex = this.userTopics.findIndex(topic => topic.topic_uuid === activeTopic.uuid)
+    let userTopic = activeTopic && this.userTopics.find(topic => topic.topic_uuid === activeTopic.uuid)
+    let userTopicIndex = activeTopic && this.userTopics.findIndex(topic => topic.topic_uuid === activeTopic.uuid)
 
-    if (!userTopic) {
-      return new Error('userTopic is not created before')
-    }
+    if (!userTopic) return new Error('userTopic is not created before')
 
     let progress = Array.from(new Set([
       ...userTopic.progress,
@@ -98,7 +96,7 @@ export default class LessonComponent extends Component {
       _topic.status = behaviour.status || 0;
       return _topic
     })
-
+    debugger;
     this.calculateUserActiveLevel();
     this.syncUserLevels(() => {
       this.syncUserLevelProgress();
@@ -126,7 +124,7 @@ export default class LessonComponent extends Component {
   }
 
   @action
-  setActiveTopic(index) {
+  setActiveTopic(index, isManually) {
     //TODO: for update - crutch
     index = index || 0;
     if (index) {
@@ -150,7 +148,16 @@ export default class LessonComponent extends Component {
       this.syncUserLevels();
       // Create userTopic if not exist
       const activeTopic = topics.find(topic => topic.active)
+
       if (!activeTopic) return;
+      const userTopic = activeTopic && this.userTopics.find(topic => topic.topic_uuid === activeTopic.uuid)
+
+      if (isManually && !userTopic) {
+         setTimeout(() => {
+          this.createUserTopic(index).then(() => this.setActiveTopic(index, false))
+        }, 100)
+        return;
+      }
 
       this.data.getWordsByTopicID(activeTopic.uuid)
         .then((list) => this.words = list)
@@ -160,10 +167,13 @@ export default class LessonComponent extends Component {
 
   calculateUserActiveLevel() {
     const topicCompletedCount = this.topics.filter(topic => topic.status).length
-    let progress = (this.topics.length / 100); // percent
-    progress *= topicCompletedCount; // percent
+
+    let progress = topicCompletedCount / (this.topics.length / 100); // percent
     const activeLevelIndex = this.levels.findIndex((level) => level.active)
-    activeLevelIndex > 0 && (this.userLevels[activeLevelIndex].progress = Math.floor(progress));
+    if (activeLevelIndex < 0 ) return
+
+    this.userLevels[activeLevelIndex].progress = Math.floor(progress);
+    console.log('progress level', this.userLevels[activeLevelIndex].progress)
   }
 
   syncUserLevelProgress() {
@@ -177,8 +187,8 @@ export default class LessonComponent extends Component {
   setActiveLevel(levelUUID, index) {
     if (index) {
       const cell = this.userLevels[index - 1];
-      if (!cell || cell.progress < 50)
-        return this.showMessage('Спочатку пройдіть рівень вище 50%', 5000);
+      if (!cell || cell.progress < 40)
+        return this.showMessage('Спочатку пройдіть рівень вище 40%', 5000);
     }
 
     if (this.levels.find((level) => level.active && level.uuid === levelUUID))
@@ -190,7 +200,7 @@ export default class LessonComponent extends Component {
         this.getTopics(levelUUID).then((list) => {
           // Set topic active
           if (!this.userTopics.length) {
-            this.createUserTopic(0).then(() => this.setActiveTopic(0))
+            this.createUserTopic(0).then(() => this.setActiveTopic(0, false))
             return
           }
           const userTopic = this.userTopics.find(topic => topic.level_uuid === levelUUID)
@@ -198,7 +208,7 @@ export default class LessonComponent extends Component {
             this.createUserTopic(index);
             return;
           }
-          this.setActiveTopic(0);
+          this.setActiveTopic(0, false);
         })
       })
   }
@@ -262,6 +272,7 @@ export default class LessonComponent extends Component {
 
       level.status = 1;
       level.progress = item.progress;
+      debugger;
     })
     // WAS problem with update ember state (rendering view)
     this.levels = [];
